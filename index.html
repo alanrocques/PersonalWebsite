@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alan Rocque</title>
+  <meta
+    name="description"
+    content="Alan Rocque — CS + Data Science at UW–Madison. Building tooling and evaluation for the next layer of AI systems."
+  >
+  <meta property="og:title" content="Alan Rocque">
+  <meta
+    property="og:description"
+    content="CS + Data Science at UW–Madison. Building tooling and evaluation for the next layer of AI systems."
+  >
+  <meta property="og:type" content="website">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0d10;
+      --bg-soft: #131821;
+      --panel: rgba(17, 23, 33, 0.78);
+      --panel-strong: rgba(14, 19, 28, 0.94);
+      --line: rgba(145, 168, 197, 0.18);
+      --text: #ecf2f8;
+      --muted: #95a4b8;
+      --accent: #8fd3ff;
+      --accent-strong: #4da3ff;
+      --accent-warm: #e8c98b;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(77, 163, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 85% 12%, rgba(232, 201, 139, 0.14), transparent 28%),
+        linear-gradient(180deg, #0b0d10 0%, #0d1118 44%, #090b0f 100%);
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.75), transparent 82%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(calc(100% - 32px), var(--max-width));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .nav {
+      position: sticky;
+      top: 16px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 14px 18px;
+      background: rgba(9, 12, 17, 0.58);
+      border: 1px solid rgba(173, 196, 222, 0.12);
+      border-radius: 999px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+    }
+
+    .nav__brand {
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .nav__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .nav__links a:hover,
+    .link:hover,
+    .project__title a:hover {
+      color: var(--accent);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.9fr);
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero__main {
+      padding: 40px;
+    }
+
+    .eyebrow,
+    .section__eyebrow,
+    .pill,
+    .stat__label {
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.78rem;
+      color: var(--accent-warm);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.75;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .hero__title {
+      max-width: 14ch;
+      margin-top: 22px;
+      font-size: clamp(3rem, 8vw, 6.4rem);
+      line-height: 0.93;
+      letter-spacing: -0.05em;
+    }
+
+    .hero__lede {
+      max-width: 60ch;
+      margin-top: 24px;
+      font-size: 1.16rem;
+      color: #d6e0ec;
+    }
+
+    .hero__lede strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .hero__copy {
+      max-width: 62ch;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .button,
+    .link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .button {
+      background: linear-gradient(135deg, rgba(143, 211, 255, 0.16), rgba(77, 163, 255, 0.34));
+      border: 1px solid rgba(143, 211, 255, 0.35);
+      color: var(--text);
+    }
+
+    .link {
+      border: 1px solid rgba(173, 196, 222, 0.18);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .button:hover,
+    .link:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero__side {
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero__panel {
+      padding: 26px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 42%),
+        var(--panel-strong);
+    }
+
+    .section__eyebrow {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .facts {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .fact {
+      display: grid;
+      gap: 6px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(173, 196, 222, 0.1);
+    }
+
+    .fact:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .fact__label {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .fact__value {
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .availability {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border: 1px solid rgba(232, 201, 139, 0.22);
+      border-radius: var(--radius-sm);
+      background: rgba(232, 201, 139, 0.06);
+    }
+
+    .availability strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .availability span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.78fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .section {
+      padding: 34px;
+    }
+
+    .section__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    .section__title {
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section__intro {
+      max-width: 42ch;
+      color: var(--muted);
+    }
+
+    .projects {
+      display: grid;
+      gap: 16px;
+    }
+
+    .project {
+      padding: 22px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(173, 196, 222, 0.1);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .project:hover {
+      transform: translateY(-3px);
+      border-color: rgba(143, 211, 255, 0.34);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .project__meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(143, 211, 255, 0.08);
+      border: 1px solid rgba(143, 211, 255, 0.16);
+      color: var(--accent);
+    }
+
+    .project__title {
+      font-size: 1.36rem;
+      letter-spacing: -0.03em;
+    }
+
+    .project__description {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline__item {
+      position: relative;
+      padding: 18px 18px 18px 26px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(173, 196, 222, 0.1);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .timeline__item::before {
+      content: "";
+      position: absolute;
+      top: 22px;
+      left: 14px;
+      bottom: 22px;
+      width: 1px;
+      background: rgba(143, 211, 255, 0.2);
+    }
+
+    .timeline__item::after {
+      content: "";
+      position: absolute;
+      top: 22px;
+      left: 10px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(143, 211, 255, 0.08);
+    }
+
+    .timeline__date {
+      display: block;
+      margin-bottom: 8px;
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.76rem;
+      color: var(--accent-warm);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .timeline__title {
+      font-size: 1.08rem;
+      font-weight: 600;
+    }
+
+    .timeline__role {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 24px;
+      padding: 24px 30px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .footer code {
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: rise 700ms cubic-bezier(.2, .8, .2, 1) forwards;
+    }
+
+    .delay-1 { animation-delay: 90ms; }
+    .delay-2 { animation-delay: 180ms; }
+    .delay-3 { animation-delay: 270ms; }
+    .delay-4 { animation-delay: 360ms; }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__title {
+        max-width: none;
+      }
+
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(calc(100% - 20px), var(--max-width));
+        padding-top: 12px;
+      }
+
+      .nav {
+        position: static;
+        border-radius: 28px;
+        padding: 16px;
+      }
+
+      .nav,
+      .section__header,
+      .footer,
+      .project__meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero__main,
+      .hero__panel,
+      .section {
+        padding: 24px;
+      }
+
+      .hero__actions {
+        width: 100%;
+      }
+
+      .button,
+      .link {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .reveal,
+      .delay-1,
+      .delay-2,
+      .delay-3,
+      .delay-4 {
+        opacity: 1;
+        transform: none;
+        animation: none;
+      }
+
+      .button,
+      .link,
+      .project {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="nav reveal">
+      <div class="nav__brand">Alan Rocque</div>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#connect">Connect</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <article class="card hero__main reveal delay-1">
+          <div class="eyebrow">About</div>
+          <h1 class="hero__title">Alan Rocque</h1>
+          <p class="hero__lede">
+            Senior at the University of Wisconsin–Madison studying Computer Science and Data Science, graduating in May 2026.
+          </p>
+          <p class="hero__copy">
+            I’ve spent the last three summers as a software engineering intern at Amazon and Intel. Most of what I build now sits in one place:
+            <strong>tooling and evaluation for the next layer of AI systems.</strong>
+            Memory services for agents, benchmarks for world models, scaffolding for MCP servers, reproductions of new research papers.
+          </p>
+          <p class="hero__copy">
+            I like the part of the stack where systems engineering meets ML, where a clean interface matters as much as the model behind it.
+          </p>
+          <div class="hero__actions">
+            <a class="button" href="mailto:alanrocque@outlook.com">alanrocque@outlook.com</a>
+            <a class="link" href="https://github.com/alanrocques" target="_blank" rel="noreferrer">GitHub</a>
+            <a class="link" href="https://www.linkedin.com/in/alan-rocque" target="_blank" rel="noreferrer">LinkedIn</a>
+          </div>
+        </article>
+
+        <div class="hero__side">
+          <aside class="card hero__panel reveal delay-2" id="connect">
+            <div class="section__eyebrow">Current focus</div>
+            <div class="facts">
+              <div class="fact">
+                <span class="fact__label">Theme</span>
+                <span class="fact__value">ML infrastructure, agent systems, developer tools</span>
+              </div>
+              <div class="fact">
+                <span class="fact__label">Research</span>
+                <span class="fact__value">UW Informatics Skunkworks</span>
+              </div>
+              <div class="fact">
+                <span class="fact__label">Recent industry work</span>
+                <span class="fact__value">AWS AppConfig, anomaly detection, workflow APIs</span>
+              </div>
+            </div>
+            <div class="availability">
+              <strong>Incoming Software Engineer at Amazon</strong>
+              <span>Still focused on ML infrastructure, agent systems, and developer tooling on the side.</span>
+            </div>
+          </aside>
+
+          <aside class="card hero__panel reveal delay-3">
+            <div class="section__eyebrow">Profiles</div>
+            <div class="facts">
+              <div class="fact">
+                <span class="fact__label">Email</span>
+                <a class="fact__value" href="mailto:alanrocque@outlook.com">alanrocque@outlook.com</a>
+              </div>
+              <div class="fact">
+                <span class="fact__label">GitHub</span>
+                <a class="fact__value" href="https://github.com/alanrocques" target="_blank" rel="noreferrer">github.com/alanrocques</a>
+              </div>
+              <div class="fact">
+                <span class="fact__label">LinkedIn</span>
+                <a class="fact__value" href="https://www.linkedin.com/in/alan-rocque" target="_blank" rel="noreferrer">linkedin.com/in/alan-rocque</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="main-grid">
+        <section class="card section reveal delay-2" id="projects">
+          <div class="section__header">
+            <div>
+              <div class="section__eyebrow">Selected projects</div>
+              <h2 class="section__title">What I’ve been building</h2>
+            </div>
+            <p class="section__intro">
+              Four projects that fit the same thesis: infrastructure and evaluation for more capable AI systems.
+            </p>
+          </div>
+
+          <div class="projects">
+            <article class="project">
+              <div class="project__meta">
+                <span class="pill">Agent memory</span>
+                <a href="https://github.com/alanrocques/Engram" target="_blank" rel="noreferrer">Open repo</a>
+              </div>
+              <h3 class="project__title"><a href="https://github.com/alanrocques/Engram" target="_blank" rel="noreferrer">Engram</a></h3>
+              <p class="project__description">
+                Experiential memory service for AI agents. Ingests OpenTelemetry traces, distills reusable lessons with an LLM, and serves them at decision time via hybrid retrieval. FastAPI, Postgres with pgvector, Celery, React, a Python SDK, and end-to-end integrations.
+              </p>
+            </article>
+
+            <article class="project">
+              <div class="project__meta">
+                <span class="pill">Research reproduction</span>
+                <a href="https://github.com/alanrocques/KimiHarness" target="_blank" rel="noreferrer">Open repo</a>
+              </div>
+              <h3 class="project__title"><a href="https://github.com/alanrocques/KimiHarness" target="_blank" rel="noreferrer">KimiHarness</a></h3>
+              <p class="project__description">
+                Open-weight reproduction of Meta-Harness, built three weeks after the paper dropped. Replaced the proposer model with Kimi K2.6 via Moonshot and pushed Symptom2Disease accuracy from 0.69 to 1.00 over 12 iterations for 73 cents.
+              </p>
+            </article>
+
+            <article class="project">
+              <div class="project__meta">
+                <span class="pill">World models</span>
+                <a href="https://github.com/alanrocques/DreamBench" target="_blank" rel="noreferrer">Open repo</a>
+              </div>
+              <h3 class="project__title"><a href="https://github.com/alanrocques/DreamBench" target="_blank" rel="noreferrer">DreamBench</a></h3>
+              <p class="project__description">
+                Diagnostic benchmark for learned world models including DreamerV3, IRIS, DIAMOND, and Delta-IRIS. Runs targeted probes for object permanence, physics consistency, and reward fidelity across Atari, MiniGrid, and Crafter.
+              </p>
+            </article>
+
+            <article class="project">
+              <div class="project__meta">
+                <span class="pill">Developer tooling</span>
+                <a href="https://github.com/alanrocques/create-mcp" target="_blank" rel="noreferrer">Open repo</a>
+              </div>
+              <h3 class="project__title"><a href="https://github.com/alanrocques/create-mcp" target="_blank" rel="noreferrer">create-mcp</a></h3>
+              <p class="project__description">
+                <code>npx create-mcp@latest</code> scaffolds a production-ready Model Context Protocol server in TypeScript or Python with auth, deployment configuration, and passing tests.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="card section reveal delay-4" id="experience">
+          <div class="section__header">
+            <div>
+              <div class="section__eyebrow">Experience</div>
+              <h2 class="section__title">Where I’ve worked</h2>
+            </div>
+          </div>
+
+          <div class="timeline">
+            <article class="timeline__item">
+              <span class="timeline__date">Summer 2025</span>
+              <h3 class="timeline__title">Amazon</h3>
+              <p class="timeline__role">Software Engineering Intern — distributed configuration system on AWS AppConfig, including multi-region A/B testing across NA, EU, and FE.</p>
+            </article>
+
+            <article class="timeline__item">
+              <span class="timeline__date">Summers 2023 and 2024</span>
+              <h3 class="timeline__title">Intel</h3>
+              <p class="timeline__role">Software Engineering Intern — anomaly detection for hardware log files and migration work on an internal workflow API from Node.js to NestJS.</p>
+            </article>
+
+            <article class="timeline__item">
+              <span class="timeline__date">2024 to present</span>
+              <h3 class="timeline__title">UW Informatics Skunkworks</h3>
+              <p class="timeline__role">Undergraduate researcher — NBA game outcome prediction with SVMs and multi-layer perceptrons.</p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="card footer reveal delay-4">
+      <span>Built as a single-file static site for immediate deployment.</span>
+      <code>alanrocques / May 2026</code>
+    </footer>
+  </div>
+</body>
+</html>
