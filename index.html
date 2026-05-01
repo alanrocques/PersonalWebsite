@@ -317,6 +317,48 @@
       .tile__flap--top { transform: rotateX(-90deg); }
       .tile__flap--bottom { transform: rotateX(0deg); }
     }
+
+    @media (max-width: 720px) {
+      :root {
+        --tw: clamp(11px, 3.6vw, 18px);
+      }
+
+      .stage { padding: clamp(16px, 5vw, 32px) 0; }
+
+      .row--columns,
+      .row--tagline {
+        display: none;
+      }
+
+      .row--header {
+        flex-wrap: wrap;
+        row-gap: 8px;
+        margin-bottom: calc(var(--th) * 0.45);
+      }
+      .row--header .spring { display: none; }
+      .row--header .cells--name {
+        --tw: clamp(20px, 6.8vw, 36px);
+        --th: calc(var(--tw) * 1.45);
+        width: 100%;
+      }
+
+      .row--entry {
+        flex-wrap: wrap;
+        row-gap: 2px;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(245, 236, 214, 0.06);
+      }
+      .row--entry .gap { display: none; }
+      .row--entry .cells--flight {
+        width: 100%;
+        margin-bottom: 4px;
+      }
+      .row--entry .cells--dest .tile__glyph {
+        font-size: calc(var(--th) * 0.74);
+      }
+      .row--entry .cells--gate { display: none; }
+      .row--entry .cells--status { margin-left: auto; }
+    }
   </style>
 </head>
 <body>
@@ -518,7 +560,7 @@
       function buildEntryRow(row) {
         const isLink = !!row.href;
         const el = document.createElement(isLink ? 'a' : 'div');
-        el.className = 'row' + (isLink ? ' row--link' : '');
+        el.className = 'row row--entry' + (isLink ? ' row--link' : '');
         if (isLink) {
           el.href = row.href;
           if (row.href.startsWith('http')) {
@@ -530,24 +572,28 @@
 
         const tiles = [];
         const flight = makeCells(row.flight, COLS.flight);
+        flight.group.classList.add('cells--flight');
         el.appendChild(flight.group);
         tiles.push(...flight.tiles);
 
         el.appendChild(makeGap(COL_GAP));
 
         const dest = makeCells(row.dest, COLS.dest);
+        dest.group.classList.add('cells--dest');
         el.appendChild(dest.group);
         tiles.push(...dest.tiles);
 
         el.appendChild(makeGap(COL_GAP));
 
         const gate = makeCells(row.gate, COLS.gate);
+        gate.group.classList.add('cells--gate');
         el.appendChild(gate.group);
         tiles.push(...gate.tiles);
 
         el.appendChild(makeGap(COL_GAP));
 
         const status = makeCells(row.status, COLS.status, { accent: statusAccent(row.status) });
+        status.group.classList.add('cells--status');
         el.appendChild(status.group);
         tiles.push(...status.tiles);
 
